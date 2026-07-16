@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@xghost123 — GHOST PROTOCOL</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'JetBrains Mono',monospace;
+      background:#07070d;color:#e0e0e0;overflow-x:hidden;
+      cursor:crosshair;
+    }
+    ::selection{background:#7c3aed;color:#fff}
+    ::-webkit-scrollbar{width:4px}
+    ::-webkit-scrollbar-track{background:#07070d}
+    ::-webkit-scrollbar-thumb{background:linear-gradient(#7c3aed,#06b6d4);border-radius:2px}
+
+    /* ── Cursor Glow ── */
+    #cursorGlow{
+      position:fixed;width:300px;height:300px;border-radius:50%;
+      background:radial-gradient(circle,rgba(124,58,237,0.06),transparent 70%);
+      pointer-events:none;z-index:9998;transform:translate(-50%,-50%);
+      transition:left .2s ease,top .2s ease;
+    }
+
+    /* ── Particles ── */
+    #particles{
+      position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;
+      background:
+        radial-gradient(ellipse at 15% 40%, rgba(124,58,237,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 85% 60%, rgba(6,182,212,0.06) 0%, transparent 60%);
+      pointer-events:none;
+    }
+
+    /* ── Matrix Rain (subtle) ── */
+    #matrixRain{
+      position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;
+      pointer-events:none;opacity:.03;
+    }
+
+    /* ── Glow Bar ── */
+    .glow-bar{
+      position:fixed;top:0;left:0;width:100%;height:2px;z-index:101;
+      background:linear-gradient(90deg,transparent,#7c3aed,#06b6d4,#a78bfa,transparent);
+      background-size:300% 100%;animation:glide 4s linear infinite;
+    }
+    @keyframes glide{0%{background-position:300% 0}100%{background-position:-300% 0}}
+
+    /* ── Nav ── */
+    nav{
+      position:fixed;top:2px;width:100%;z-index:100;
+      background:rgba(7,7,13,0.85);backdrop-filter:blur(16px) saturate(1.3);
+      padding:16px 40px;display:flex;justify-content:space-between;align-items:center;
+      border-bottom:1px solid rgba(255,255,255,0.03);
+    }
+    nav .logo{font-weight:800;font-size:.85em;letter-spacing:3px}
+    nav .logo .h{color:#7c3aed}
+    nav .logo .d{color:#333;font-weight:300}
+    nav .links{display:flex;gap:2px}
+    nav .links a{
+      color:#444;text-decoration:none;font-size:.6em;padding:6px 16px;
+      border-radius:4px;transition:all .3s;letter-spacing:1.5px;position:relative;
+    }
+    nav .links a:hover{color:#a78bfa;background:rgba(124,58,237,0.06)}
+
+    /* ── Hero ── */
+    .hero{
+      min-height:100vh;display:flex;align-items:center;justify-content:center;
+      padding:140px 24px 80px;position:relative;z-index:1;
+    }
+    .hero-content{max-width:800px;text-align:center}
+    .hero .badge{
+      display:inline-block;padding:5px 18px;border:1px solid rgba(124,58,237,0.2);
+      border-radius:4px;font-size:.55em;color:#7c3aed;letter-spacing:4px;
+      margin-bottom:28px;text-transform:uppercase;background:rgba(124,58,237,0.04);
+      animation:pulseBadge 3s ease-in-out infinite;
+    }
+    @keyframes pulseBadge{0%,100%{opacity:1}50%{opacity:.4}}
+    .hero h1{font-size:5.5em;font-weight:900;line-height:1;margin-bottom:14px;letter-spacing:-2px}
+    .hero h1 .g{
+      background:linear-gradient(135deg,#7c3aed 0%,#a78bfa 40%,#06b6d4 80%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      background-size:200% 200%;animation:gradShift 6s ease-in-out infinite;
+    }
+    @keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    .hero h1 .num{color:#333}
+    .hero .tagline{height:1.8em;font-size:1em;color:#666;margin-bottom:36px}
+    .hero .tagline .typing::after{
+      content:'|';animation:blink .8s step-end infinite;color:#7c3aed;
+    }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    /* ── Roles ── */
+    .roles{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:44px}
+    .roles span{
+      padding:6px 16px;border:1px solid rgba(255,255,255,0.06);border-radius:4px;
+      font-size:.65em;color:#666;transition:all .3s;cursor:pointer;
+    }
+    .roles span:hover{
+      border-color:#7c3aed;color:#a78bfa;background:rgba(124,58,237,0.08);
+      transform:translateY(-2px);
+    }
+
+    /* ── Terminal ── */
+    .terminal-box{
+      max-width:640px;margin:0 auto;background:rgba(12,12,22,0.85);
+      border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;
+      backdrop-filter:blur(12px);
+    }
+    .terminal-header{
+      background:rgba(20,20,36,0.8);padding:10px 16px;
+      display:flex;align-items:center;gap:7px;border-bottom:1px solid rgba(255,255,255,0.04);
+    }
+    .d{width:7px;height:7px;border-radius:50%}.d.r{background:#ff5f56}.d.y{background:#ffbd2e}.d.g{background:#27c93f}
+    .term-t{color:#333;font-size:.6em;margin-left:10px;letter-spacing:1px}
+    .term-body{
+      padding:20px;text-align:left;font-size:.78em;line-height:1.9;min-height:170px;max-height:300px;overflow-y:auto;
+    }
+    .term-body .p{color:#7c3aed;user-select:none}
+    .term-body .c{color:#e0e0e0}
+    .term-body .o{color:#555;margin-left:16px}
+    .term-body .h{color:#06b6d4}
+    .term-body .s{color:#27c93f}
+    .term-input-line{
+      display:flex;align-items:center;gap:8px;padding:8px 16px 14px;
+      border-top:1px solid rgba(255,255,255,0.04);
+    }
+    .term-input-line .p{color:#7c3aed;font-size:.72em;user-select:none}
+    .term-input{
+      flex:1;background:transparent;border:none;color:#e0e0e0;
+      font-family:inherit;font-size:.78em;outline:none;
+    }
+    .term-input::placeholder{color:#2a2a2a}
+
+    /* ── Stats ── */
+    .stats-row{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+      gap:10px;max-width:800px;margin:50px auto;padding:0 24px;z-index:1;position:relative;
+    }
+    .stat{
+      background:rgba(255,255,255,0.012);border:1px solid rgba(255,255,255,0.04);
+      border-radius:6px;padding:18px;text-align:center;transition:all .3s;
+      position:relative;overflow:hidden;
+    }
+    .stat::before{content:'';position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,#7c3aed,transparent);opacity:0;transition:opacity .3s}
+    .stat:hover::before{opacity:1}
+    .stat:hover{transform:translateY(-3px);border-color:rgba(124,58,237,0.2)}
+    .stat .n{font-size:1.8em;font-weight:800;background:linear-gradient(135deg,#7c3aed,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .stat .l{color:#444;font-size:.55em;margin-top:3px;text-transform:uppercase;letter-spacing:2px}
+
+    /* ── Sections ── */
+    .section{
+      max-width:800px;margin:0 auto;padding:90px 24px;position:relative;z-index:1;
+      opacity:0;transform:translateY(30px);transition:all .8s cubic-bezier(.22,1,.36,1);
+    }
+    .section.vis{opacity:1;transform:translateY(0)}
+    .sec-hdr{font-size:.55em;color:#444;text-transform:uppercase;letter-spacing:4px;margin-bottom:6px}
+    .sec-hdr::before{content:'// ';color:#7c3aed}
+    .section h2{font-size:1.8em;font-weight:700;margin-bottom:36px;color:#e0e0e0;line-height:1.3}
+    .section h2 .a{background:linear-gradient(135deg,#7c3aed,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+    /* ── Cards ── */
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .card{
+      background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);
+      border-radius:8px;padding:28px;transition:all .4s;position:relative;overflow:hidden;
+    }
+    .card::before{content:'';position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,#7c3aed,transparent);opacity:0;transition:opacity .4s}
+    .card:hover{border-color:rgba(124,58,237,0.15);background:rgba(124,58,237,0.02);transform:translateY(-2px)}
+    .card:hover::before{opacity:1}
+    .card .ic{font-size:1.5em;margin-bottom:10px}
+    .card h3{font-size:.85em;margin-bottom:6px;color:#e0e0e0}
+    .card p{font-size:.68em;color:#555;line-height:1.7}
+    .tg{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+    .tg span{padding:2px 10px;border:1px solid rgba(255,255,255,0.06);border-radius:3px;font-size:.55em;color:#7c3aed}
+
+    /* ── CVE ── */
+    .cve{padding:12px 16px;border:1px solid rgba(255,255,255,0.04);border-radius:6px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;transition:all .3s;cursor:pointer}
+    .cve:hover{border-color:rgba(124,58,237,0.2);background:rgba(124,58,237,0.03)}
+    .cve .id{color:#a78bfa;font-size:.7em;font-weight:600}
+    .cve .d{color:#555;font-size:.6em;margin-top:1px}
+    .cve .sev{font-size:.55em;padding:3px 10px;border-radius:3px;font-weight:600;white-space:nowrap}
+    .sev-c{background:rgba(220,38,38,0.08);color:#ef4444;border:1px solid rgba(220,38,38,0.15)}
+
+    /* ── Timeline ── */
+    .tl{position:relative;padding-left:24px}
+    .tl::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:1px;background:linear-gradient(#7c3aed,#06b6d4,rgba(124,58,237,.2))}
+    .tl-i{position:relative;margin-bottom:22px;padding-left:16px}
+    .tl-i::before{content:'◇';position:absolute;left:-20px;color:#7c3aed;font-size:.65em}
+    .tl-i .yr{font-size:.6em;color:#7c3aed;letter-spacing:2px}
+    .tl-i h4{font-size:.8em;color:#e0e0e0;margin:2px 0}
+    .tl-i p{font-size:.65em;color:#555}
+
+    /* ── Skill bars ── */
+    .skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+    .skill-bar{margin-bottom:4px}
+    .skill-bar .lbl{display:flex;justify-content:space-between;font-size:.6em;color:#666;margin-bottom:4px}
+    .skill-bar .track{height:4px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
+    .skill-bar .fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#7c3aed,#06b6d4);width:0;transition:width 1.5s cubic-bezier(.22,1,.36,1)}
+    .section.vis .skill-bar .fill{width:var(--w)}
+
+    /* ── Contact ── */
+    .ct{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px}
+    .ct a{
+      padding:10px 24px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;
+      color:#666;text-decoration:none;font-size:.7em;transition:all .3s;position:relative;overflow:hidden;
+    }
+    .ct a::before{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,#7c3aed,transparent);transform:translateX(-100%);transition:transform .3s}
+    .ct a:hover::before{transform:translateX(0)}
+    .ct a:hover{border-color:rgba(124,58,237,0.2);color:#a78bfa}
+
+    /* ── Chat ── */
+    .cp{position:fixed;bottom:20px;right:20px;z-index:1000}
+    .cb{
+      width:48px;height:48px;border-radius:10px;border:none;
+      background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;
+      font-size:1.1em;cursor:pointer;box-shadow:0 4px 24px rgba(124,58,237,0.25);
+      transition:all .3s;
+    }
+    .cb:hover{transform:scale(1.08);box-shadow:0 6px 32px rgba(124,58,237,0.35)}
+    .cx{
+      display:none;width:320px;height:400px;
+      background:#0c0c16;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;
+      margin-bottom:10px;box-shadow:0 8px 40px rgba(0,0,0,0.5);
+    }
+    .cx.o{display:flex;flex-direction:column}
+    .ch{background:#141424;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;justify-content:space-between;align-items:center}
+    .ch .nm{color:#7c3aed;font-weight:600;font-size:.75em}
+    .ch .st{color:#27c93f;font-size:.6em}
+    .cbd{flex:1;padding:12px;overflow-y:auto;font-size:.72em;line-height:1.7}
+    .m{margin-bottom:8px}
+    .m .s{color:#7c3aed;font-weight:600;font-size:.65em}
+    .m .t{color:#999;font-size:.65em}
+    .m.u .s{color:#06b6d4}
+    .ci{display:flex;padding:8px;border-top:1px solid rgba(255,255,255,0.04);gap:6px}
+    .ci input{
+      flex:1;background:#141424;border:1px solid rgba(255,255,255,0.06);border-radius:5px;
+      padding:7px 10px;color:#e0e0e0;font-family:inherit;font-size:.7em;outline:none;
+    }
+    .ci button{background:#7c3aed;border:none;border-radius:5px;padding:7px 12px;color:#fff;cursor:pointer;font-size:.7em}
+
+    footer{text-align:center;padding:40px 24px;border-top:1px solid rgba(255,255,255,0.02);color:#222;font-size:.6em;position:relative;z-index:1}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:768px){
+      .hero h1{font-size:3em}
+      .g2{grid-template-columns:1fr}
+      .skills-grid{grid-template-columns:1fr}
+      nav{padding:12px 16px}nav .links{display:none}
+      .cx{width:calc(100vw - 40px);height:360px}
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursorGlow"></div>
+<div id="particles"></div>
+<canvas id="matrixRain"></canvas>
+<div class="glow-bar"></div>
+
+<!-- ─── Nav ─── -->
+<nav>
+  <div class="logo"><span class="h">@xghost123</span> <span class="d">// PROTOCOL</span></div>
+  <div class="links">
+    <a href="#about">PROFILE</a>
+    <a href="#work">WORK</a>
+    <a href="#cve">CVE</a>
+    <a href="#path">PATH</a>
+    <a href="#contact">CONTACT</a>
+  </div>
+</nav>
+
+<!-- ─── Hero ─── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="badge">◇ SESSION ACTIVE</div>
+    <h1><span class="g">@xghost123</span></h1>
+    <p class="tagline"><span class="typing" id="typewriter"></span></p>
+    <div class="roles">
+      <span>Pentest</span><span>Red Team</span><span>Exploit Dev</span>
+      <span>AI Systems</span><span>Python</span><span>Go</span>
+      <span>Rust</span><span>DevSecOps</span><span>Blockchain</span>
+    </div>
+    <div class="terminal-box">
+      <div class="terminal-header">
+        <span class="d r"></span><span class="d y"></span><span class="d g"></span>
+        <span class="term-t">xghost123@ghost:~ — zsh</span>
+      </div>
+      <div class="term-body" id="termBody">
+        <div><span class="p">xghost123@ghost:~$</span> <span class="c">./probe --identity</span></div>
+        <div class="o">{</div>
+        <div class="o">  "handle": "<span class="h">@xghost123</span>",</div>
+        <div class="o">  "roles": ["<span class="s">AI Engineer</span>","<span class="s">Full-Stack Dev</span>","<span class="s">Security Researcher</span>","<span class="s">CEH</span>"],</div>
+        <div class="o">  "focus": "<span class="h">Offensive Security · AI · Automation</span>",</div>
+        <div class="o">  "status": "<span class="s">ACTIVE</span>"</div>
+        <div class="o">}</div>
+        <div style="margin-top:8px"><span class="p">xghost123@ghost:~$</span> <span class="c">./status --brief</span></div>
+        <div class="o">Tools: <span class="h">50+</span> · CVEs: <span class="h">∞</span> · Projects: <span class="h">10+</span> · Uptime: <span class="s">100%</span></div>
+        <div class="o" style="color:#222;margin-top:4px">Type <span style="color:#7c3aed;">/help</span> to explore</div>
+      </div>
+      <div class="term-input-line">
+        <span class="p">xghost123@ghost:~$</span>
+        <input class="term-input" id="termIn" placeholder="/help" autofocus spellcheck="false">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Stats ─── -->
+<div class="stats-row">
+  <div class="stat"><div class="n">15+</div><div class="l">Years Building</div></div>
+  <div class="stat"><div class="n">50+</div><div class="l">Tools Built</div></div>
+  <div class="stat"><div class="n">∞</div><div class="l">CVEs Found</div></div>
+  <div class="stat"><div class="n">CEH</div><div class="l">Certified</div></div>
+  <div class="stat"><div class="n">10+</div><div class="l">Projects</div></div>
+</div>
+
+<!-- ─── About ─── -->
+<section class="section" id="about">
+  <div class="sec-hdr">PROFILE</div>
+  <h2>Building at the intersection of <span class="a">security</span> and <span class="a">intelligence</span></h2>
+  <div class="g2">
+    <div class="card">
+      <div class="ic">🔐</div>
+      <h3>Security Research</h3>
+      <p>Offensive security, vulnerability discovery, exploit development. Building cutting-edge pentest tooling with AI-powered analysis and automated exploitation pipelines.</p>
+      <div class="tg"><span>Pentest</span><span>Exploit Dev</span><span>WAF Bypass</span><span>Red Team</span></div>
+    </div>
+    <div class="card">
+      <div class="ic">🧠</div>
+      <h3>AI Engineering</h3>
+      <p>LLM-powered autonomous systems, agentic workflows, AI-driven security analysis. Integrating intelligence into every layer of the security stack.</p>
+      <div class="tg"><span>LLMs</span><span>Agentic AI</span><span>RAG</span><span>Automation</span></div>
+    </div>
+    <div class="card">
+      <div class="ic">💻</div>
+      <h3>Full-Stack Development</h3>
+      <p>Production systems from frontend to backend. Python, Go, Rust, React — engineered with security as a foundational principle.</p>
+      <div class="tg"><span>Python</span><span>Go</span><span>Rust</span><span>React</span></div>
+    </div>
+    <div class="card">
+      <div class="ic">🛡️</div>
+      <h3>Certified Ethical Hacker</h3>
+      <p>CEH certified with deep expertise in network penetration testing, web application security, social engineering, and red team operations.</p>
+      <div class="tg"><span>CEH</span><span>Web Security</span><span>Network</span><span>OSINT</span></div>
+    </div>
+  </div>
+
+  <!-- Skills -->
+  <div class="skills-grid" style="margin-top:40px">
+    <div class="skill-bar"><div class="lbl"><span>Penetration Testing</span><span>95%</span></div><div class="track"><div class="fill" style="--w:95%"></div></div></div>
+    <div class="skill-bar"><div class="lbl"><span>Python</span><span>95%</span></div><div class="track"><div class="fill" style="--w:95%"></div></div></div>
+    <div class="skill-bar"><div class="lbl"><span>AI / ML</span><span>85%</span></div><div class="track"><div class="fill" style="--w:85%"></div></div></div>
+    <div class="skill-bar"><div class="lbl"><span>Go</span><span>80%</span></div><div class="track"><div class="fill" style="--w:80%"></div></div></div>
+    <div class="skill-bar"><div class="lbl"><span>Web Security</span><span>90%</span></div><div class="track"><div class="fill" style="--w:90%"></div></div></div>
+    <div class="skill-bar"><div class="lbl"><span>React / Frontend</span><span>75%</span></div><div class="track"><div class="fill" style="--w:75%"></div></div></div>
+    <div class="skill-bar"><div class="lbl"><span>Rust</span><span>70%</span></div><div class="track"><div class="fill" style="--w:70%"></div></div></div>
+    <div class="skill-bar"><div class="lbl"><span>DevOps / Cloud</span><span>80%</span></div><div class="track"><div class="fill" style="--w:80%"></div></div></div>
+  </div>
+</section>
+
+<!-- ─── Featured ─── -->
+<section class="section" id="work">
+  <div class="sec-hdr">FEATURED</div>
+  <h2><span class="a">Open source</span> security tooling</h2>
+  <div class="card" style="padding:28px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+      <div style="flex:1">
+        <h3 style="font-size:.9em;margin-bottom:4px;">AURA Pentest Framework</h3>
+        <p style="font-size:.65em;color:#555;margin-bottom:10px;line-height:1.6;">
+          AI-powered web penetration testing with 50+ scan modules, automated exploitation, AD assessment, Telegram bot, CVE matching engine, false-positive reduction, and dark-themed HTML reports.
+        </p>
+        <div class="tg">
+          <span>50+ Modules</span><span>AI Analysis</span><span>Telegram Bot</span>
+          <span>CVE Matcher</span><span>AD Assessment</span><span>Open Source</span>
+        </div>
+      </div>
+      <a href="https://github.com/xghost123/AuraPentestAi" target="_blank" style="padding:8px 18px;border:1px solid rgba(124,58,237,0.3);border-radius:5px;color:#a78bfa;text-decoration:none;font-size:.65em;white-space:nowrap;transition:all .3s;"
+      onmouseover="this.style.borderColor='#7c3aed';this.style.background='rgba(124,58,237,0.1)'" 
+      onmouseout="this.style.borderColor='rgba(124,58,237,0.3)';this.style.background='transparent'"
+      >◇ GitHub →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CVE ─── -->
+<section class="section" id="cve">
+  <div class="sec-hdr">FINDINGS</div>
+  <h2>Vulnerability <span class="a">discovery</span></h2>
+  <div class="cve">
+    <div><div class="id">CSAT SSO Token Leak</div><div class="d">Critical auth bypass in Chery iCar SSO — unrestricted Bearer token on /oauth_status</div></div>
+    <span class="sev sev-c">CRITICAL</span>
+  </div>
+  <div class="cve">
+    <div><div class="id">AllMySMS SOAP Auth Bypass</div><div class="d">Pre-auth logMsg() call before security check — potential RCE in PHP SOAP server</div></div>
+    <span class="sev sev-c">CRITICAL</span>
+  </div>
+  <div class="cve">
+    <div><div class="id">DVR Cloud Storage Exposure</div><div class="d">MinIO presigned URL pattern disclosure — accessible dashcam footage via S3 API</div></div>
+    <span class="sev sev-c">CRITICAL</span>
+  </div>
+  <div class="cve">
+    <div><div class="id">callback4 Internal DNS Pivot</div><div class="d">Internal BIND zone enumeration on AllMySMS callback server — full network mapping</div></div>
+    <span class="sev sev-c">CRITICAL</span>
+  </div>
+</section>
+
+<!-- ─── Timeline ─── -->
+<section class="section" id="path">
+  <div class="sec-hdr">PATH</div>
+  <h2>Evolution <span class="a">timeline</span></h2>
+  <div class="tl">
+    <div class="tl-i"><div class="yr">2026</div><h4>AURA Pentest Framework v3.0</h4><p>AI-powered pentesting with Telegram bot, CVE matcher, 50+ modules. Open sourced on GitHub.</p></div>
+    <div class="tl-i"><div class="yr">2025 — 2026</div><h4>Critical Vulnerability Research</h4><p>SSO token leaks, SOAP auth bypasses, cloud storage exposures across major platforms.</p></div>
+    <div class="tl-i"><div class="yr">2024</div><h4>AI Security Tooling</h4><p>Integrating LLMs into penetration testing. Building autonomous security agents.</p></div>
+    <div class="tl-i"><div class="yr">2022 — 2024</div><h4>Full-Stack & Security Engineering</h4><p>Production systems across the stack while advancing offensive security expertise.</p></div>
+    <div class="tl-i"><div class="yr">CEH</div><h4>Certified Ethical Hacker</h4><p>Professional certification in ethical hacking and penetration testing.</p></div>
+  </div>
+</section>
+
+<!-- ─── Contact ─── -->
+<section class="section" id="contact">
+  <div class="sec-hdr">CONNECT</div>
+  <h2>Drop a <span class="a">message</span></h2>
+  <p style="color:#555;font-size:.7em;margin-bottom:28px;text-align:center;max-width:460px;margin-left:auto;margin-right:auto;">
+    Open for security research collaborations, pentest engagements, and interesting projects.
+  </p>
+  <div class="ct">
+    <a href="mailto:xghost123@protonmail.com">✉️ xghost123@protonmail.com</a>
+    <a href="https://github.com/xghost123" target="_blank">◇ GitHub</a>
+    <a href="https://t.me/xghost123" target="_blank">✈️ Telegram</a>
+    <a href="https://buymeacoffee.com/xghost123" target="_blank">☕ Buy Me a Coffee</a>
+  </div>
+</section>
+
+<!-- ─── Chat ─── -->
+<div class="cp">
+  <div class="cx" id="chatBox">
+    <div class="ch">
+      <div><span class="nm">◇ GHOST</span> <span class="st">● ONLINE</span></div>
+      <span style="color:#444;cursor:pointer;font-size:.7em;" onclick="c()">✕</span>
+    </div>
+    <div class="cbd" id="chatBd">
+      <div class="m"><span class="s">GHOST:</span> <span class="t">I'm @xghost123's AI interface. Ask me anything about his work.</span></div>
+    </div>
+    <div class="ci">
+      <input id="chatIn" placeholder="Ask..." onkeydown="if(event.key==='Enter')s()">
+      <button onclick="s()">→</button>
+    </div>
+  </div>
+  <button class="cb" onclick="t()">◇</button>
+</div>
+
+<footer>@xghost123 · GHOST PROTOCOL</footer>
+
+<script>
+// ─── Typewriter ───
+const twTexts = [
+  "Security Researcher • AI Engineer • Full-Stack Dev",
+  "CEH • Pentester • Exploit Developer",
+  "Building AURA — AI-Powered Pentest Framework",
+  "Offensive Security • Automation • Innovation",
+];
+let ti = 0, ci = 0, isDel = false;
+const el = document.getElementById('typewriter');
+function tw(){
+  const txt = twTexts[ti];
+  if(!isDel){
+    el.textContent = txt.substring(0, ci+1);
+    ci++;
+    if(ci === txt.length){setTimeout(()=>{isDel=true;tw()},2000);return}
+  } else {
+    el.textContent = txt.substring(0, ci-1);
+    ci--;
+    if(ci === 0){isDel=false;ti=(ti+1)%twTexts.length}
+  }
+  setTimeout(tw, isDel ? 20 : 50);
+}
+tw();
+
+// ─── Terminal ───
+const _i=document.getElementById('termIn'),_b=document.getElementById('termBody');
+const _c={
+  '/help':()=>`<span class="h">/id</span>          — Identity<br><span class="h">/work</span>        — Projects<br><span class="h">/cve</span>         — Findings<br><span class="h">/tools</span>       — Stack<br><span class="h">/contact</span>     — Reach out<br><span class="h">/matrix</span>      — ✨<br><span class="h">/clear</span>       — Clear`,
+  '/id':()=>`"handle": "<span class="h">@xghost123</span>"<br>"roles": ["AI Engineer","Full-Stack","Security Researcher","CEH"]<br>"status": "<span class="s">ACTIVE</span>"`,
+  '/work':()=>`◇ <span class="h">AURA Pentest Framework v3.0</span><br>  AI pentesting · 50+ modules · Open source<br>  → https://github.com/xghost123/AuraPentestAi`,
+  '/cve':()=>`  <span class="h">CSAT SSO Leak</span>          — CRITICAL<br>  <span class="h">AllMySMS Bypass</span>        — CRITICAL<br>  <span class="h">DVR Cloud Exposure</span>    — CRITICAL<br>  <span class="h">callback4 DNS</span>          — CRITICAL`,
+  '/tools':()=>`  Lang: <span class="h">Python</span> <span class="h">Go</span> <span class="h">Rust</span> <span class="h">JS</span><br>  Sec: <span class="h">Burp</span> <span class="h">Nmap</span> <span class="h">Metasploit</span><br>  AI: <span class="h">LLMs</span> <span class="h">Agents</span><br>  Cloud: <span class="h">Docker</span> <span class="h">K8s</span>`,
+  '/contact':()=>`  Email: <span class="h">xghost123@protonmail.com</span><br>  GitHub: <span class="h">https://github.com/xghost123</span><br>  TG: <span class="h">@xghost123</span>`,
+  '/matrix':()=>{let o='';for(let i=0;i<5;i++){let l='';for(let j=0;j<40;j++)l+=String.fromCharCode(0x30A0+Math.random()*96);o+=`<span style="color:#27c93f">${l}</span><br>`}return o},
+  '/clear':()=>{_b.innerHTML='';return''}
+};
+_i.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    const c=_i.value.trim();_i.value='';
+    _b.innerHTML+=`<div><span class="p">xghost123@ghost:~$</span> <span class="c">${c}</span></div>`;
+    if(c.startsWith('/')){
+      const h=_c[c.toLowerCase()];
+      if(h){const o=h();if(o)_b.innerHTML+=`<div class="o">${o}</div>`}
+      else _b.innerHTML+=`<div class="o" style="color:#ef4444;">? Type /help</div>`;
+    }else _b.innerHTML+=`<div class="o" style="color:#ef4444;">? Type /help</div>`;
+    _b.scrollTop=_b.scrollHeight;
+  }
+});
+
+// ─── Scroll Reveal ───
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis') });
+}, { threshold: .1 });
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+// ─── Cursor ───
+document.addEventListener('mousemove', e => {
+  document.getElementById('cursorGlow').style.left = e.clientX + 'px';
+  document.getElementById('cursorGlow').style.top = e.clientY + 'px';
+});
+
+// ─── Matrix Rain ───
+const mC = document.getElementById('matrixRain'), mCtx = mC.getContext('2d');
+let mW,mH,mD;
+function mR(){
+  mW=mC.width=mC.parentElement.offsetWidth;mH=mC.height=mC.parentElement.offsetHeight;
+  const cols=Math.floor(mW/20);mD=[];for(let i=0;i<cols;i++)mD[i]=1;
+}
+window.addEventListener('resize',mR);mR();
+function mDraw(){
+  mCtx.fillStyle='rgba(7,7,13,0.05)';mCtx.fillRect(0,0,mW,mH);
+  mCtx.fillStyle='rgba(124,58,237,0.35)';mCtx.font='10px JetBrains Mono';
+  for(let i=0;i<mD.length;i++){
+    const t=String.fromCharCode(0x30A0+Math.random()*96);
+    mCtx.fillText(t,i*20,mD[i]*20);
+    if(mD[i]*20>mH&&Math.random()>.975)mD[i]=0;
+    mD[i]++;
+  }
+  requestAnimationFrame(mDraw);
+}
+mDraw();
+
+// ─── Particles ───
+const pC=document.createElement('canvas'),pB=document.getElementById('particles');
+pC.style='position:absolute;top:0;left:0;width:100%;height:100%';
+pB.appendChild(pC);const pCtx=pC.getContext('2d');let pts=[];
+function pR(){pC.width=pB.offsetWidth;pC.height=pB.offsetHeight}
+window.addEventListener('resize',pR);pR();
+for(let i=0;i<50;i++)pts.push({x:Math.random()*pC.width,y:Math.random()*pC.height,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,s:Math.random()*1.5+1});
+function pDraw(){
+  pCtx.clearRect(0,0,pC.width,pC.height);
+  for(let p of pts){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>pC.width)p.vx*=-1;if(p.y<0||p.y>pC.height)p.vy*=-1;
+    pCtx.beginPath();pCtx.arc(p.x,p.y,p.s,0,Math.PI*2);
+    pCtx.fillStyle='rgba(124,58,237,0.12)';pCtx.fill();
+  }
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<120){pCtx.beginPath();pCtx.moveTo(pts[i].x,pts[i].y);pCtx.lineTo(pts[j].x,pts[j].y);pCtx.strokeStyle=`rgba(124,58,237,${.04*(1-d/120)})`;pCtx.stroke()}
+  }
+  requestAnimationFrame(pDraw);
+}
+pDraw();
+
+// ─── Chat ───
+const rs=["@xghost123 specializes in offensive security, AI engineering, and full-stack dev. He built the AURA Pentest Framework.","CEH certified security researcher. Focus: web app pentesting, AI automation, exploit dev.","AURA is his flagship OS project — 50+ modules, Telegram bot, CVE matcher, dark reports.","Reach him at xghost123@protonmail.com or @xghost123 on Telegram.","Discovers critical vulns — SSO leaks, SOAP bypasses, cloud exposures.","Stack: Python, Go, Rust. Full-stack, security-first.","AURA Pentest Framework is on GitHub. Star it! ⭐"];
+function t(){document.getElementById('chatBox').classList.toggle('o')}
+function c(){document.getElementById('chatBox').classList.remove('o')}
+function s(){
+  const i=document.getElementById('chatIn'),b=document.getElementById('chatBd'),m=i.value.trim();
+  if(!m)return;
+  b.innerHTML+=`<div class="m u"><span class="s">You:</span> <span class="t">${m}</span></div>`;i.value='';
+  setTimeout(()=>{b.innerHTML+=`<div class="m"><span class="s">GHOST:</span> <span class="t">${rs[Math.floor(Math.random()*rs.length)]}</span></div>`;b.scrollTop=b.scrollHeight},500+Math.random()*1000);
+  b.scrollTop=b.scrollHeight;
+}
+</script>
+</body>
+</html>
