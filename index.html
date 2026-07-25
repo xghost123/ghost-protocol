@@ -391,21 +391,33 @@
   <div class="sec-hdr">FINDINGS</div>
   <h2>Vulnerability <span class="a">discovery</span></h2>
   <div class="cve">
-    <div><div class="id">CSAT SSO Token Leak</div><div class="d">Critical auth bypass in Chery iCar SSO — unrestricted Bearer token on /oauth_status</div></div>
-    <span class="sev sev-c">CRITICAL</span>
-  </div>
-  <div class="cve">
-    <div><div class="id">AllMySMS SOAP Auth Bypass</div><div class="d">Pre-auth logMsg() call before security check — potential RCE in PHP SOAP server</div></div>
-    <span class="sev sev-c">CRITICAL</span>
-  </div>
-  <div class="cve">
-    <div><div class="id">DVR Cloud Storage Exposure</div><div class="d">MinIO presigned URL pattern disclosure — accessible dashcam footage via S3 API</div></div>
-    <span class="sev sev-c">CRITICAL</span>
-  </div>
-  <div class="cve">
-    <div><div class="id">callback4 Internal DNS Pivot</div><div class="d">Internal BIND zone enumeration on AllMySMS callback server — full network mapping</div></div>
-    <span class="sev sev-c">CRITICAL</span>
-  </div>
+              <div><span class="id">CSAT SSO Token Leak</span><br><span class="d">Critical auth bypass in Chery iCar telematics SSO</span></div>
+              <span class="sev" style="background:rgba(220,38,38,0.15);color:#ef4444;border:1px solid rgba(220,38,38,0.3)">CRITICAL</span>
+            </div>
+            <div class="cve">
+              <div><span class="id">AllMySMS SOAP Auth Bypass</span><br><span class="d">logMsg() undefined before auth check — pre-auth RCE</span></div>
+              <span class="sev" style="background:rgba(220,38,38,0.15);color:#ef4444;border:1px solid rgba(220,38,38,0.3)">CRITICAL</span>
+            </div>
+            <div class="cve">
+              <div><span class="id">DVR Cloud Storage Exposure</span><br><span class="d">MinIO presigned URL disclosure — dashcam footage via S3</span></div>
+              <span class="sev" style="background:rgba(220,38,38,0.15);color:#ef4444;border:1px solid rgba(220,38,38,0.3)">CRITICAL</span>
+            </div>
+            <div class="cve">
+              <div><span class="id">OrderTaker SaaS Full Compromise</span><br><span class="d">18K customer PII, LIVE Razorpay/PayTM keys, DO Spaces, root SSH</span></div>
+              <span class="sev" style="background:rgba(220,38,38,0.15);color:#ef4444;border:1px solid rgba(220,38,38,0.3)">CRITICAL</span>
+            </div>
+            <div class="cve">
+              <div><span class="id">Feiyue WeChat Ecosystem Breach</span><br><span class="d">45 apps compromised, 22K users, 4 WeChat Pay merchants, Tencent Cloud keys</span></div>
+              <span class="sev" style="background:rgba(220,38,38,0.15);color:#ef4444;border:1px solid rgba(220,38,38,0.3)">CRITICAL</span>
+            </div>
+            <div class="cve">
+              <div><span class="id">Bhavani Server Total Takeover</span><br><span class="d">13 databases, 3.7M records, full DO Spaces R/W/D, SSH keys leaked</span></div>
+              <span class="sev" style="background:rgba(220,38,38,0.08);color:#f59e0b;border:1px solid rgba(245,158,11,0.3)">HIGH</span>
+            </div>
+            <div class="cve">
+              <div><span class="id">Multi-Provider Cloud API Key Leak</span><br><span class="d">DO, Tencent Cloud, Alibaba API keys exposed in public .env files</span></div>
+              <span class="sev" style="background:rgba(220,38,38,0.08);color:#f59e0b;border:1px solid rgba(245,158,11,0.3)">HIGH</span>
+            </div>
 </section>
 
 <!-- ─── Timeline ─── -->
